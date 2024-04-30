@@ -146,9 +146,17 @@ function animatePterodactyl() {
     }
 }
 
-// Fonction pour récupérer les informations météorologiques à partir de l'API OpenWeather
+
+
+// Fonction pour vérifier s'il pleut
+function isRaining(weatherData) {
+    return weatherData.weather.some(weather => weather.main.toLowerCase().includes('rain'));
+}
+
 function fetchWeatherInfo(isDaytime) {
-    var apiKey = '4d0168f1babd4e74801d4aa39f749660';
+    var apiKey = '3ab95bbccb312fc4c53a58222f8e5952';
+    // var apiKey = '4d0168f1babd4e74801d4aa39f749660';
+
     // Récupère les coordonnées géographiques de l'utilisateur
     navigator.geolocation.getCurrentPosition(function(position) {
         var latitude = position.coords.latitude;
@@ -158,8 +166,8 @@ function fetchWeatherInfo(isDaytime) {
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    var isRaining = isRaining(data);
-                    applyWeatherStyles(isDaytime, isRaining);
+                    var isRainingNow = isRaining(data); // Vérifie s'il pleut
+                    applyWeatherStyles(isDaytime, isRainingNow); // Applique les styles en fonction des conditions météorologiques
                 })
                 .catch(error => console.error('Error fetching weather data:', error));
         } catch (error) {
@@ -168,12 +176,6 @@ function fetchWeatherInfo(isDaytime) {
     });
 }
 
-// Fonction pour vérifier s'il pleut
-function isRaining(weatherData) {
-    return weatherData.weather.some(weather => weather.main.toLowerCase().includes('rain'));
-}
-
-// Fonction pour appliquer les styles en fonction des conditions météorologiques
 function applyWeatherStyles(isDaytime, isRaining) {
     var body = document.body;
     if (isDaytime) {
@@ -185,8 +187,8 @@ function applyWeatherStyles(isDaytime, isRaining) {
     }
     var rainDiv = document.querySelector('.rain');
     if (isRaining) {
-        rain.removeAttribute('hidden');
+        rainDiv.removeAttribute('hidden'); // Affiche l'animation de pluie si nécessaire
     } else {
-        rain.setAttribute('hidden', true);
+        rainDiv.setAttribute('hidden', true); // Masque l'animation de pluie si nécessaire
     }
 }
